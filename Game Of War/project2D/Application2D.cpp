@@ -7,7 +7,7 @@
 #include <algorithm>
 
 Application2D::Application2D() {
-	srand(time(NULL));
+	srand(time(NULL)); // seed random numbers
 }
 
 Application2D::~Application2D() {
@@ -21,16 +21,12 @@ bool Application2D::startup() {
 	m_playerFont = new aie::Font("./font/consolas.ttf", 20);
 	m_winnerFont = new aie::Font("./font/consolas_bold.ttf", 120);
 
-	for (int i = 0; i < numberOfCombatants; i++)
+	for (int i = 0; i < numberOfCombatants; i++) // fill vectors with new combatants
 	{
-		// using vectors
 		redCombatants.push_back(new Combatant());
 		blueCombatants.push_back(new Combatant());
-		// using arrays
-		//redCombatants[i] = new Combatant();
-		//blueCombatants[i] = new Combatant();
 	}
-	for (int i = 0; i < numberOfCombatants; i++)
+	for (int i = 0; i < numberOfCombatants; i++) // pick initial targets for all combatants
 	{
 		redCombatants[i]->LookForNewTarget(blueCombatants);
 		blueCombatants[i]->LookForNewTarget(redCombatants);
@@ -42,9 +38,9 @@ bool Application2D::startup() {
 	return true;
 }
 
-bool highToLow(Combatant* i, Combatant* j) { return i->GetHealth() > j->GetHealth(); };
+bool highToLow(Combatant* i, Combatant* j) { return i->GetHealth() > j->GetHealth(); }; 
 
-void Application2D::sortByHealth(std::vector<Combatant*> combatantList)
+void Application2D::sortByHealth(std::vector<Combatant*> combatantList) // function used for sorting the combatants from highest health to lowest health
 {
 	std::sort(combatantList.begin(), combatantList.end(), highToLow);
 }
@@ -52,26 +48,27 @@ void Application2D::sortByHealth(std::vector<Combatant*> combatantList)
 void Application2D::shutdown() {
 	
 	delete m_2dRenderer;
-	//delete[] redCombatants;
-	//delete[] blueCombatants;
-
+	for (int i = 0; i < numberOfCombatants; i++) // delete all combatants
+	{
+		delete redCombatants[i];
+		delete blueCombatants[i];
+	}
 }
 
-void Application2D::WaitForSeconds(float seconds)
+void Application2D::WaitForSeconds(float seconds) // used for normalizing simulation speeds on different computers
 {
 	float clockEndTime = seconds * 1000 + clock();
 	while (clock() < clockEndTime);
 }
 
 void Application2D::update(float deltaTime) {
-	// input example
 	aie::Input* input = aie::Input::getInstance();
 
-	WaitForSeconds(0.01);
+	WaitForSeconds(0.01); // used for normalizing simulation speeds on different computers
 
 	if (input->wasKeyPressed(32)) // pause the simulation if space is pressed
 	{
-		gameOver = !gameOver;
+		gameOver = !gameOver; // invert the game over variable (as long as there are still combatants alive this will act as a pause button)
 	}
 
 	if (!gameOver)
@@ -79,7 +76,7 @@ void Application2D::update(float deltaTime) {
 		//update Combatant logic
 		for (int i = 0; i < numberOfCombatants; i++)
 		{
-			if (rand() % 99 + 1 <= 50)
+			if (rand() % 100 + 1 <= 50) // there is a 50/50 chance that red or blue will be updated first
 			{
 				if (redCombatants[i]->GetCurrentTarget()->CheckifDead())
 					redCombatants[i]->LookForNewTarget(blueCombatants);
@@ -98,7 +95,7 @@ void Application2D::update(float deltaTime) {
 				redCombatants[i]->MoveCombatant();
 			}
 		}
-		if (CheckIfGameOver(redCombatants) || CheckIfGameOver(blueCombatants))
+		if (CheckIfGameOver(redCombatants) || CheckIfGameOver(blueCombatants)) // if an entire team is dead the simulation is over
 			gameOver = true;
 
 		sortByHealth(redCombatants);
@@ -180,8 +177,6 @@ void Application2D::draw() {
 			pointToDraw = redCombatants[i]->GetPosition();
 			m_2dRenderer->drawCircle(pointToDraw.x, pointToDraw.y, 16, 16);
 			m_2dRenderer->setRenderColour(1, 1, 1, 1);
-			//ConvertNumToCharArray(i);
-			//m_2dRenderer->drawText(m_playerFont, combatantNumber, pointToDraw.x-10, pointToDraw.y-10);
 		}
 		else
 		{
@@ -189,8 +184,6 @@ void Application2D::draw() {
 			Point2D pointToDraw = redCombatants[i]->GetPosition();
 			m_2dRenderer->drawCircle(pointToDraw.x, pointToDraw.y, 20, 20);
 			m_2dRenderer->setRenderColour(.3, .3, .3, 1);
-			//ConvertNumToCharArray(i);
-			//m_2dRenderer->drawText(m_playerFont, combatantNumber, pointToDraw.x - 10, pointToDraw.y - 10);
 		}
 	}
 	// draw blueCombatants

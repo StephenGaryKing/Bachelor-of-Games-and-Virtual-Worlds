@@ -1,11 +1,11 @@
 #pragma once
 #include <vector>
 
-struct Point2D
+struct Point2D // point in 2D space
 {
 	float x, y;
 };
-struct Colour
+struct Colour // colour using red, green, blue, alpha
 {
 	float R, G, B, A;
 };
@@ -25,7 +25,6 @@ public:
 	void MoveCombatant();
 	void TryToAttack();
 	void LookForNewTarget(std::vector<Combatant*> combatants);
-	void LookForNewTarget(Combatant* combatants[]);
 	bool CheckifDead();
 	void UpdatePhysics();
 	~Combatant();

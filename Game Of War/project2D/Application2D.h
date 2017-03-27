@@ -26,13 +26,15 @@ protected:
 
 	aie::Renderer2D*	m_2dRenderer;
 
+	// fonts
 	aie::Font*			m_playerFont;
 	aie::Font*			m_winnerFont;
+
+	// combatant lists
 	std::vector<Combatant*> redCombatants;
 	std::vector<Combatant*> blueCombatants;
-	//Combatant* redCombatants[10];
-	//Combatant* blueCombatants[10];
 
+	//variables
 	float m_cameraX, m_cameraY;
 	int numberOfCombatants = 10;
 	bool gameOver = false;
