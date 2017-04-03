@@ -20,8 +20,8 @@ struct Button
 	Colour outerColour;
 	Colour innerColour;
 	char text[10];
-	int size[2];
-	int position[2];
+	float size[2];
+	float position[2];
 };
 
 class Application2D : public aie::Application {
@@ -62,7 +62,7 @@ protected:
 	float m_mouseX, m_mouseY;
 	bool m_mouseIsPressed = false;
 	float m_boardPositions[9][2] = { { 180, 540 },{ 360, 540 },{ 540, 540 },{ 180, 360 },{ 360,360 },{ 540, 360 },{ 180, 180 },{ 360, 180 },{ 540, 180} };
-	int m_currentTurn = rand()%2+1;
+	int m_currentTurn = 1;
 	int m_maxDepth = 1;
 	int m_currentDepth = 1;
 	int m_gameState = -1;

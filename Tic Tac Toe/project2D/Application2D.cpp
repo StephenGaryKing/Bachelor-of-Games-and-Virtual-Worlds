@@ -7,7 +7,7 @@
 #include <ctime>
 
 Application2D::Application2D() {
-
+	srand((size_t)time(NULL));
 }
 
 Application2D::~Application2D() {
@@ -21,7 +21,7 @@ void Application2D::WaitForSeconds(float seconds) // used to control the "pace" 
 }
 
 bool Application2D::startup() {
-	
+
 	m_2dRenderer = new aie::Renderer2D();
 	// set the backround colour to teal
 	setBackgroundColour(0, 0.1f, 0.2f, 1);
@@ -40,7 +40,7 @@ bool Application2D::startup() {
 		m_boardLayout[i] = m_blankTexture; // populate the board with blank spaces
 	}
 
-	Colour buttonOutline {.4,.4,.4,1}; // gray
+	Colour buttonOutline {.4f,.4f,.4f,1}; // gray
 	Colour buttonInnerColour{ 0,1,1,1 }; // teal
 
 	// create each button at the main menu screen
@@ -90,7 +90,7 @@ void Application2D::update(float deltaTime) {
 					{
 						m_difficulty[n] = m_MainMenuButtons[i].text[n];
 					}
-					m_gameState = 0;
+					m_gameState = 5;
 					m_mouseX = 0;
 					m_mouseY = 0;
 					// change the backround colour to purple
@@ -100,7 +100,6 @@ void Application2D::update(float deltaTime) {
 			}
 		}
 	}
-
 	// while the game is being played
 	if (m_gameState == 0)
 	{
@@ -134,7 +133,7 @@ void Application2D::update(float deltaTime) {
 		else
 		{
 			//computer's turn
-			WaitForSeconds(rand()%2);
+			WaitForSeconds(rand()%2 * 1.0f);
 			if (strcmp(m_difficulty, "EASY") == 0)
 			{
 				m_boardLayout[FindRandomMove()] = m_OTexture; // move randomly if the difficulty is EASY
@@ -154,6 +153,11 @@ void Application2D::update(float deltaTime) {
 		}
 	}
 
+	if (m_gameState == 5)
+	{
+		m_gameState = 0;
+	}
+
 	// exit the application
 	if (input->isKeyDown(aie::INPUT_KEY_ESCAPE))
 		quit();
@@ -162,7 +166,7 @@ void Application2D::update(float deltaTime) {
 	if (input->wasKeyPressed(aie::INPUT_KEY_R) && (m_gameState > -1))
 	{
 		m_gameState = 0;
-		m_currentTurn = rand() % 2 + 1;
+		m_currentTurn = 1;
 		for (int i = 0; i < 9; i++)
 		{
 			m_boardLayout[i] = m_blankTexture;
@@ -172,7 +176,7 @@ void Application2D::update(float deltaTime) {
 	// change difficulty (return to main menu and clear the board)
 	if (input->wasKeyPressed(aie::INPUT_KEY_SPACE) && (m_gameState > -1))
 	{
-		m_currentTurn = rand() % 2 + 1;
+		m_currentTurn = 1;
 		for (int i = 0; i < 9; i++)
 		{
 			m_boardLayout[i] = m_blankTexture;
@@ -305,7 +309,7 @@ int Application2D::FindBestMove() // find the best move given the current board 
 	}
 
 	Move bestSpotToMove = { 10, -10 };
-	for (int i = 0; i < AllMoves.size(); i++)
+	for (size_t i = 0; i < AllMoves.size(); i++)
 	{
 		if (AllMoves[i].Score == 0 && bestSpotToMove.position == -10) // if there is no best spot to move set it to the first spot that is a draw (draws can only be ditermined ahead of time if set to HARD difficulty)
 		{
@@ -359,13 +363,14 @@ int Application2D::MiniMax(aie::Texture* currentPlayer, std::vector<Move>* AllMo
 			}
 		}
 	}
+	return 0;
 }
 
 // function for drawing buttons
 void Application2D::DrawButton(Button button)
 {
 	m_2dRenderer->setRenderColour(button.outerColour.R, button.outerColour.G, button.outerColour.B, button.outerColour.A);
-	m_2dRenderer->drawBox(button.position[0]+button.size[0]/2, button.position[1], button.size[0] + button.size[0]/10, button.size[1] + button.size[0] / 10);
+	m_2dRenderer->drawBox(button.position[0]+button.size[0]/2.0f, button.position[1], button.size[0] + button.size[0]/10.0f, button.size[1] + button.size[0] / 10.0f);
 	m_2dRenderer->setRenderColour(button.innerColour.R, button.innerColour.G, button.innerColour.B, button.innerColour.A);
 	m_2dRenderer->drawBox(button.position[0] + button.size[0] / 2, button.position[1], button.size[0], button.size[1]);
 	m_2dRenderer->setRenderColour(button.outerColour.R, button.outerColour.G, button.outerColour.B, button.outerColour.A);

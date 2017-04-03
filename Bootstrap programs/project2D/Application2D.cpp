@@ -7,7 +7,7 @@
 #include <algorithm>
 
 Application2D::Application2D() {
-	srand(time(NULL)); // seed random numbers
+	srand((size_t)time(NULL)); // seed random numbers
 }
 
 Application2D::~Application2D() {
@@ -64,7 +64,7 @@ void Application2D::WaitForSeconds(float seconds) // used for normalizing simula
 void Application2D::update(float deltaTime) {
 	aie::Input* input = aie::Input::getInstance();
 
-	WaitForSeconds(0.01); // used for normalizing simulation speeds on different computers
+	WaitForSeconds(0.01f); // used for normalizing simulation speeds on different computers
 
 	if (input->wasKeyPressed(32)) // pause the simulation if space is pressed
 	{
@@ -157,7 +157,7 @@ void Application2D::draw() {
 	m_2dRenderer->begin();
 
 	//draw general text
-	m_2dRenderer->setRenderColour(1, 1, 1, .4);
+	m_2dRenderer->setRenderColour(1, 1, 1, 0.4f);
 	m_2dRenderer->drawText(m_playerFont, "Press 'Esc' to close simulation", 5, 5);
 
 	// draw redCombatants
@@ -180,10 +180,10 @@ void Application2D::draw() {
 		}
 		else
 		{
-			m_2dRenderer->setRenderColour(.1, .1, .1, 1);
+			m_2dRenderer->setRenderColour(0.1f, 0.1f, 0.1f, 1);
 			Point2D pointToDraw = redCombatants[i]->GetPosition();
 			m_2dRenderer->drawCircle(pointToDraw.x, pointToDraw.y, 20, 20);
-			m_2dRenderer->setRenderColour(.3, .3, .3, 1);
+			m_2dRenderer->setRenderColour(0.3f, 0.3f, 0.3f, 1);
 		}
 	}
 	// draw blueCombatants
@@ -208,10 +208,10 @@ void Application2D::draw() {
 		}
 		else
 		{
-			m_2dRenderer->setRenderColour(.1, .1, .1, 1);
+			m_2dRenderer->setRenderColour(0.1f, 0.1f, 0.1f, 1);
 			Point2D pointToDraw = blueCombatants[i]->GetPosition();
 			m_2dRenderer->drawCircle(pointToDraw.x, pointToDraw.y, 20, 20);
-			m_2dRenderer->setRenderColour(.3, .3, .3, 1);
+			m_2dRenderer->setRenderColour(0.3f, 0.3f, 0.3f, 1);
 			//ConvertNumToCharArray(i);
 			//m_2dRenderer->drawText(m_playerFont, combatantNumber, pointToDraw.x - 10, pointToDraw.y - 10);
 		}
@@ -222,14 +222,14 @@ void Application2D::draw() {
 	{
 		m_2dRenderer->setRenderColour(0, 0, 1, 1);
 		m_2dRenderer->drawText(m_winnerFont, "BLUE WINS!", +20, 300);
-		m_2dRenderer->setRenderColour(1, 1, 1, .8);
+		m_2dRenderer->setRenderColour(1, 1, 1, 0.8f);
 		m_2dRenderer->drawText(m_playerFont, "Press 'R' to retsart simulation", 5, 30);
 	}
 	if (CheckIfGameOver(blueCombatants))
 	{
 		m_2dRenderer->setRenderColour(1, 0, 0, 1);
 		m_2dRenderer->drawText(m_winnerFont, "RED WINS!", +50, 300);
-		m_2dRenderer->setRenderColour(1, 1, 1, .8);
+		m_2dRenderer->setRenderColour(1, 1, 1, 0.8f);
 		m_2dRenderer->drawText(m_playerFont, "Press 'R' to retsart simulation", 5, 30);
 	}
 
